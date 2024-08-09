@@ -1,0 +1,63 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice & Text AI Assistant</title>
+    <style>
+        /* Basic styling for the UI */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        input[type="text"] {
+            width: calc(100% - 50px);
+            padding: 10px;
+            margin-right: 10px;
+        }
+        button {
+            padding: 10px;
+        }
+        .response {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Voice & Text AI Assistant</h1>
+        <form method="POST">
+            <input type="text" name="user_input" placeholder="Type your message here" required>
+            <button type="submit">Send</button>
+        </form>
+        <button id="start-recording">Start Voice Input</button>
+        <div class="response">
+            {% if user_input %}
+                <p><strong>Your Input:</strong> {{ user_input }}</p>
+                <p><strong>AI Response:</strong> {{ response }}</p>
+            {% endif %}
+        </div>
+    </div>
+    <script>
+        // JavaScript for handling voice input
+        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.lang = 'en-US';
+        recognition.interimResults = false;
+        recognition.onresult = function(event) {
+            document.querySelector('input[name="user_input"]').value = event.results[0][0].transcript;
+            document.querySelector('form').submit();
+        };
+        document.getElementById('start-recording').onclick = function() {
+            recognition.start();
+        };
+    </script>
+</body>
+</html>
